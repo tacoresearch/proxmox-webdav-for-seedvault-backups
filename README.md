@@ -35,7 +35,8 @@ ssh root@10.10.10.94 'bash -s' < scripts/test-webdav.sh
 ## Phone setup
 
 1. Install DAVx⁵.
-2. Add a WebDAV mount with the URL, user and password above.
+2. Open the menu, then WebDAV mounts, then +, and enter the URL, user and password above.
+   Do not use "Add account"; that wizard only finds CalDAV/CardDAV and will report it couldn't find a service.
 3. Accept the self-signed certificate after checking its fingerprint.
 4. Settings, System, Backup (Seedvault): pick the DAVx⁵ mount, save the 12-word recovery code, run a backup.
 
