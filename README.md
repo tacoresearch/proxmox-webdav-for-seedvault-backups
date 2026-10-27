@@ -1,7 +1,43 @@
 # webdavx5
-
-Self-hosted WebDAV target for Seedvault backups on GrapheneOS, reached through DAVx⁵.
+This is a script that deploys a proxmox self-hosted Apache based WebDAV target for Seedvault backups, used on GrapheneOS, reached through DAVx⁵.
 Runs as an unprivileged LXC on the Proxmox host `node5` (10.10.10.94).
+
+customize 'create-container.sh' first before running.
+
+## Deploy using this script
+
+From a machine with SSH access to the Proxmox host:
+
+```bash
+ssh root@10.10.10.94 'bash -s' < scripts/create-container.sh
+ssh root@10.10.10.94 'pct exec 506 -- bash -s' < scripts/setup-webdav.sh
+ssh root@10.10.10.94 'bash -s' < scripts/test-webdav.sh
+```
+
+`setup-webdav.sh` is safe to re-run; it keeps an existing certificate and password.
+## Account
+| Item | Value |
+|---|---|
+| URL | `https://10.10.10.159/webdav/` |
+| User | `seedvault` |
+
+## Obtain Password
+The password is not in this repo. Read it with:
+
+```bash
+ssh root@10.10.10.94 "pct exec 506 -- cat /root/webdav-credentials.txt"
+```
+
+## Phone setup
+
+1. Install DAVx⁵, suggest finding on FDROID store.
+2. Open the menu, then WebDAV mounts, then +, and enter the URL, user and password above.
+   Do not use "Add account"; that wizard only finds CalDAV/CardDAV and will report it couldn't find a service.
+3. Accept the self-signed certificate after checking its fingerprint.
+4. Settings, System, Backup (Seedvault): pick the DAVx⁵ mount, save the 12-word recovery code, run a backup.
+
+Seedvault's built-in WebDAV option is still beta and rejects self-signed certificates, so DAVx⁵ is used instead.
+
 
 ## Current deployment
 
@@ -13,34 +49,6 @@ Runs as an unprivileged LXC on the Proxmox host `node5` (10.10.10.94).
 | User | `seedvault` |
 | Storage | 100 GB on `fivehundedsata`, mounted at `/srv/webdav` |
 | TLS | Self-signed, 10 years, SHA-256 `D0:C4:5D:74:...:1F:9A:3A:23:ED` |
-
-The password is not in this repo. Read it with:
-
-```bash
-ssh root@10.10.10.94 "pct exec 506 -- cat /root/webdav-credentials.txt"
-```
-
-## Rebuild from scratch
-
-From a machine with SSH access to the Proxmox host:
-
-```bash
-ssh root@10.10.10.94 'bash -s' < scripts/create-container.sh
-ssh root@10.10.10.94 'pct exec 506 -- bash -s' < scripts/setup-webdav.sh
-ssh root@10.10.10.94 'bash -s' < scripts/test-webdav.sh
-```
-
-`setup-webdav.sh` is safe to re-run; it keeps an existing certificate and password.
-
-## Phone setup
-
-1. Install DAVx⁵.
-2. Open the menu, then WebDAV mounts, then +, and enter the URL, user and password above.
-   Do not use "Add account"; that wizard only finds CalDAV/CardDAV and will report it couldn't find a service.
-3. Accept the self-signed certificate after checking its fingerprint.
-4. Settings, System, Backup (Seedvault): pick the DAVx⁵ mount, save the 12-word recovery code, run a backup.
-
-Seedvault's built-in WebDAV option is still beta and rejects self-signed certificates, so DAVx⁵ is used instead.
 
 ## Host fixes made on node5 (2026-10-26)
 

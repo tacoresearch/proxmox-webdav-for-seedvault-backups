@@ -1,11 +1,13 @@
 #!/bin/bash
-# Run on the Proxmox host (node5) as root.
-# Creates the unprivileged Debian 13 LXC that hosts the Seedvault WebDAV server.
+# Run on the Proxmox host as root.
+# Requirements: the --mp0 is calling a mount point for the fivehundedsata ZFS pool and it must exist before running this script, and the Debian 13 LXC template must be downloaded.
+# Settings: CTID, DATA_SIZE
+# Actions: Creates the unprivileged Debian 13 LXC that hosts the Seedvault WebDAV server.
 set -euo pipefail
 
 CTID=${CTID:-506}
-TEMPLATE=${TEMPLATE:-local:vztmpl/debian-13-standard_13.1-2_amd64.tar.zst}
 DATA_SIZE=${DATA_SIZE:-100}   # GB, on the fivehundedsata ZFS pool
+TEMPLATE=${TEMPLATE:-local:vztmpl/debian-13-standard_13.1-2_amd64.tar.zst}
 
 pct create "$CTID" "$TEMPLATE" \
   --hostname seedvault5 \
